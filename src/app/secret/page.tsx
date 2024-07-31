@@ -17,7 +17,7 @@ const SecretPage = () => {
       setShouldShowIframe(true);
     } else {
       // Redirect if the key is incorrect
-      router.push('/');
+      router.push('/404');
     }
   }, [router]);
 
