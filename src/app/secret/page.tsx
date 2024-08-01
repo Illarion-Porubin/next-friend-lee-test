@@ -14,6 +14,7 @@ const SecretPage = () => {
 
     if (key) {
       //Sending the key to the server
+      setShouldShowIframe(true)
       fetch("http://localhost:8080/update-key", {
         method: "POST",
         headers: {
@@ -28,10 +29,10 @@ const SecretPage = () => {
   return (
     <div>
       <h1>Secret Page</h1>
-      {shouldShowIframe || true ? (
+      {shouldShowIframe ? (
         <iframe src="http://localhost:3000" width="800" height="600" />
       ) : (
-        <p>Redirecting...</p>
+        <p>Loaded...</p>
       )}
     </div>
   );
