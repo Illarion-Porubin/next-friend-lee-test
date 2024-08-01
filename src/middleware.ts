@@ -2,6 +2,10 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // Define your middleware function
+
+// http://localhost:3000/secret?key=mypassword 
+
+
 export function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
 

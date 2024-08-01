@@ -1,19 +1,42 @@
-// server.js
+
 const WebSocket = require('ws');
 const http = require('http');
+const cors = require('cors');
+const express = require('express');
 
-const server = http.createServer();
+const app = express();
+const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-const KEY_VALUE = 'mypassword'; // The key value to send
+let KEY_VALUE = ''; 
 
+// Middleware to handle CORS
+app.use(cors({
+  origin: 'http://localhost:3000', 
+  allowedHeaders: ['Content-Type']
+}));
+
+// Middleware to parse JSON
+app.use(express.json());
+
+// Update the key
+app.post('/update-key', (req, res) => {
+  const { key } = req.body;
+  if (key !== undefined) {
+    KEY_VALUE = key;
+    res.status(200).json({ message: 'Key updated successfully' });
+  } else {
+    res.status(400).json({ error: 'Key is missing' });
+  }
+});
+
+// WebSocket connection handling
 wss.on('connection', (ws) => {
   console.log('New WebSocket connection');
-  // Send the key value every 5 seconds
   const intervalId = setInterval(() => {
     if (ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ key: KEY_VALUE }));
-      console.log('Key send');
+      console.log('Key sent:', KEY_VALUE);
     }
   }, 5000);
 
@@ -23,7 +46,6 @@ wss.on('connection', (ws) => {
   });
 });
 
-const port = 8080;
-server.listen(port, () => {
-  console.log(`WebSocket server is running on ws://localhost:${port}`);
+server.listen(8080, () => {
+  console.log(`WebSocket server is running on ws://localhost:8080`);
 });
